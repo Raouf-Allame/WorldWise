@@ -1,7 +1,7 @@
 function AppNav() {
   return (
     <div>
-      
+      AppNav
     </div>
   )
 }
