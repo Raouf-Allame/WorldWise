@@ -9,10 +9,10 @@ import Spinner from "../Spinner/Spinner"
 import styles from "./Form.module.css";
 import { useUrlPosition } from "../../hooks/useUrlPosition";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css"
 import { useCities } from "../../contexts/CitiesContext";
 import { useNavigate } from "react-router-dom";
 
+import "react-datepicker/dist/react-datepicker.css"
 export function convertToEmoji(countryCode) {
   const codePoints = countryCode
     .toUpperCase()
@@ -34,9 +34,9 @@ function Form() {
   const [emoji, setEmoji] = useState()
   const [geocodingError, setGeocodingError] = useState("")
 
+  const navigate = useNavigate()
 
   useEffect(function () {
-    const navigate = useNavigate()
     
 
     async function fetchCityData() {
