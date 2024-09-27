@@ -1,18 +1,6 @@
 {
   "cities": [
     {
-      "cityName": "Avis",
-      "country": "Portugal",
-      "emoji": "🇵🇹",
-      "date": "2024-09-26T23:40:35.945Z",
-      "notes": "",
-      "position": {
-        "lat": "39.13236758624142",
-        "lng": "-7.841481391699153"
-      },
-      "id": 98443218
-    },
-    {
       "cityName": "Alaejos",
       "country": "Spain",
       "emoji": "🇪🇸",
