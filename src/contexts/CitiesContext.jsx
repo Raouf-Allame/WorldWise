@@ -1,11 +1,11 @@
-import { createContext, useContext, useEffect, useReducer} from "react";
+import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
 
 const BASE_URL = 'http://localhost:8000'
 
 
 const CitiesContext = createContext()
 
-const initialState ={
+const initialState = {
   cities: [],
   isLoading: false,
   currentCity: {},
@@ -13,74 +13,74 @@ const initialState ={
 }
 function reducer(state, action) {
   switch (action.type) {
-    case 'loading': 
-      return {...state, isLoading: true}
+    case 'loading':
+      return { ...state, isLoading: true }
     case 'city/loaded':
-      return {...state, isLoading: false, currentCity: action.payload}
+      return { ...state, isLoading: false, currentCity: action.payload }
     case 'cities/loaded':
-      return {...state, isLoading: false, cities: action.payload}
+      return { ...state, isLoading: false, cities: action.payload }
     case 'city/created':
-      return {...state, isLoading: false, cities: [...state.cities, action.payload], currentCity: action.payload}
+      return { ...state, isLoading: false, cities: [...state.cities, action.payload], currentCity: action.payload }
     case 'city/deleted':
-      return {...state, isLoading: false, cities:  state.cities.filter(city => city.id !== action.payload)}
+      return { ...state, isLoading: false, cities: state.cities.filter(city => city.id !== action.payload) }
     case 'rejected':
-      return {...state, error: action.payload, isLoading: false}
+      return { ...state, error: action.payload, isLoading: false }
 
-    default : throw new Error ("Unknown")
+    default: throw new Error("Unknown")
   }
 }
 
 function CitiesProvider({ children }) {
-  const [{cities, isLoading, currentCity}, dispatch] = useReducer(reducer, initialState)
+  const [{ cities, isLoading, currentCity }, dispatch] = useReducer(reducer, initialState)
 
 
   useEffect(function () {
     async function fetchCites() {
       try {
-        dispatch({type: 'loading'})
+        dispatch({ type: 'loading' })
         const res = await fetch(`${BASE_URL}/cities`)
         const data = await res.json()
-        dispatch({type: 'cities/loaded', payload: data})
+        dispatch({ type: 'cities/loaded', payload: data })
       } catch {
-        dispatch({type: 'rejected', payload: "There was error loading cities..."})
+        dispatch({ type: 'rejected', payload: "There was error loading cities..." })
       }
     }
     fetchCites()
   }, [])
 
-  async function getCity(id) {
+  const getCity = useCallback(async function getCity(id) {
     if (Number(id) === currentCity.id) return
     try {
-      dispatch({type: 'loading'})
-      
+      dispatch({ type: 'loading' })
+
       const res = await fetch(`${BASE_URL}/cities/${id}`)
       const data = await res.json()
-      dispatch({type: 'city/loaded', payload: data})
+      dispatch({ type: 'city/loaded', payload: data })
     } catch {
-      dispatch({type: 'rejected', payload: "There was error loading city..."})
-      
+      dispatch({ type: 'rejected', payload: "There was error loading city..." })
+
     }
-  }
+  },[currentCity.id])
 
 
-  async function deleteCity (id) {
-   
+  async function deleteCity(id) {
+
     try {
-      dispatch({type: 'loading'})
+      dispatch({ type: 'loading' })
 
-      const res = await fetch(`${BASE_URL}/cities/${id}`,{
+      const res = await fetch(`${BASE_URL}/cities/${id}`, {
         method: "DELETE",
       })
-      dispatch({type: 'city/deleted', payload: id})
+      dispatch({ type: 'city/deleted', payload: id })
     } catch {
-      dispatch({type: 'rejected', payload: "There was error deleting city..."})
+      dispatch({ type: 'rejected', payload: "There was error deleting city..." })
     }
   }
   async function createCity(newCity) {
     try {
-      dispatch({type: 'loading'})
+      dispatch({ type: 'loading' })
 
-      const res = await fetch(`${BASE_URL}/cities`,{
+      const res = await fetch(`${BASE_URL}/cities`, {
         method: "POST",
         body: JSON.stringify(newCity),
         headers: {
@@ -88,9 +88,9 @@ function CitiesProvider({ children }) {
         }
       })
       const data = await res.json()
-      dispatch({type: 'city/created', payload: data})
+      dispatch({ type: 'city/created', payload: data })
     } catch {
-      dispatch({type: 'rejected', payload: "There was error creating the city"})
+      dispatch({ type: 'rejected', payload: "There was error creating the city" })
     }
   }
 
@@ -109,4 +109,4 @@ function useCities() {
 }
 
 
-export { CitiesProvider, useCities}
+export { CitiesProvider, useCities }

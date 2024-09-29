@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {useAuth} from "../contexts/FakeAuthContext"
 import Button from "../components/Button/Button";
 import { useNavigate } from "react-router-dom";
+import PageNav from "../components/PageNav/PageNav";
 
 export default function Login() {
   // PRE-FILL FOR DEV PURPOSES
@@ -22,6 +23,7 @@ export default function Login() {
   }, [isAuthenticated, navigate])
   return (
     <main className={styles.login}>
+      <PageNav />
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.row}>
           <label htmlFor="email">Email address</label>
